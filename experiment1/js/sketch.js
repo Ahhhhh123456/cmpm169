@@ -42,6 +42,9 @@ function resizeScreen() {
 
 // setup() function is called once when the program starts
 function setup() {
+  background(0);
+  currentColor = color(255);
+  noFill();
   // place our canvas, making it fit our container
   canvasContainer = $("#canvas-container");
   let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
@@ -55,10 +58,6 @@ function setup() {
     resizeScreen();
   });
   resizeScreen();
-
-  background(0);
-  currentColor = color(255);
-  noFill();
 }
 
 function draw() {
