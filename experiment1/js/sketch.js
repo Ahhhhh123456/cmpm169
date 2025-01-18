@@ -6,27 +6,59 @@
 // Note that p5.js looks for a file called sketch.js
 
 
+// Constants - User-servicable parts
 // In a longer project I like to put these in a separate file
 const VALUE1 = 1;
 const VALUE2 = 2;
 
-
-// Global Variables
+// Globals
+let myInstance;
+let canvasContainer;
+var centerHorz, centerVert;
 let count = 0; // Declare the count variable in the global scope
 let clicked = false; // Flag to track mouse clicks
 let currentColor; // Variable to store the current stroke color
 let lastColorChange = 0; // Tracks the last time the color changed
 let colorChangeInterval = 100; // Number of frames between color changes
 
+class MyClass {
+    constructor(param1, param2) {
+        this.property1 = param1;
+        this.property2 = param2;
+    }
+
+    myMethod() {
+        // code to run when method is called
+    }
+}
+
+function resizeScreen() {
+  centerHorz = canvasContainer.width() / 2; // Adjusted for drawing logic
+  centerVert = canvasContainer.height() / 2; // Adjusted for drawing logic
+  console.log("Resizing...");
+  resizeCanvas(canvasContainer.width(), canvasContainer.height());
+  // redrawCanvas(); // Redraw everything based on new size
+}
+
+// setup() function is called once when the program starts
 function setup() {
-  createCanvas(800, 800);
+  // place our canvas, making it fit our container
+  canvasContainer = $("#canvas-container");
+  let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
+  canvas.parent("canvas-container");
+  // resize canvas is the page is resized
+
+  // create an instance of the class
+  myInstance = new MyClass("VALUE1", "VALUE2");
+
+  $(window).resize(function() {
+    resizeScreen();
+  });
+  resizeScreen();
+
   background(0);
   currentColor = color(255);
   noFill();
-}
-
-function mouseClicked() {
-  clicked = !clicked; // Toggle the clicked state
 }
 
 function draw() {
