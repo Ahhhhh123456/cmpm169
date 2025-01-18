@@ -5,8 +5,13 @@
 // Here is how you might set up an OOP p5.js project
 // Note that p5.js looks for a file called sketch.js
 
-// Global Variables
 
+// In a longer project I like to put these in a separate file
+const VALUE1 = 1;
+const VALUE2 = 2;
+
+
+// Global Variables
 let count = 0; // Declare the count variable in the global scope
 let clicked = false; // Flag to track mouse clicks
 let currentColor; // Variable to store the current stroke color
