@@ -1,79 +1,60 @@
 // sketch.js - purpose and description here
-// Author: Your Name
-// Date:
+// Author: Jason Li
+// Date: 1/17/ 2024
 
 // Here is how you might set up an OOP p5.js project
 // Note that p5.js looks for a file called sketch.js
 
-// Constants - User-servicable parts
-// In a longer project I like to put these in a separate file
-const VALUE1 = 1;
-const VALUE2 = 2;
+// Global Variables
 
-// Globals
-let myInstance;
-let canvasContainer;
-var centerHorz, centerVert;
+let count = 0; // Declare the count variable in the global scope
+let clicked = false; // Flag to track mouse clicks
+let currentColor; // Variable to store the current stroke color
+let lastColorChange = 0; // Tracks the last time the color changed
+let colorChangeInterval = 100; // Number of frames between color changes
 
-class MyClass {
-    constructor(param1, param2) {
-        this.property1 = param1;
-        this.property2 = param2;
-    }
-
-    myMethod() {
-        // code to run when method is called
-    }
-}
-
-function resizeScreen() {
-  centerHorz = canvasContainer.width() / 2; // Adjusted for drawing logic
-  centerVert = canvasContainer.height() / 2; // Adjusted for drawing logic
-  console.log("Resizing...");
-  resizeCanvas(canvasContainer.width(), canvasContainer.height());
-  // redrawCanvas(); // Redraw everything based on new size
-}
-
-// setup() function is called once when the program starts
 function setup() {
-  // place our canvas, making it fit our container
-  canvasContainer = $("#canvas-container");
-  let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
-  canvas.parent("canvas-container");
-  // resize canvas is the page is resized
-
-  // create an instance of the class
-  myInstance = new MyClass("VALUE1", "VALUE2");
-
-  $(window).resize(function() {
-    resizeScreen();
-  });
-  resizeScreen();
+  createCanvas(800, 800);
+  background(0);
+  currentColor = color(255);
+  noFill();
 }
 
-// draw() function is called repeatedly, it's the main animation loop
+function mouseClicked() {
+  clicked = !clicked; // Toggle the clicked state
+}
+
 function draw() {
-  background(220);    
-  // call a method on the instance
-  myInstance.myMethod();
 
-  // Set up rotation for the rectangle
-  push(); // Save the current drawing context
-  translate(centerHorz, centerVert); // Move the origin to the rectangle's center
-  rotate(frameCount / 100.0); // Rotate by frameCount to animate the rotation
-  fill(234, 31, 81);
-  noStroke();
-  rect(-125, -125, 250, 250); // Draw the rectangle centered on the new origin
-  pop(); // Restore the original drawing context
+  background(0, 20);
 
-  // The text is not affected by the translate and rotate
-  fill(255);
-  textStyle(BOLD);
-  textSize(140);
-  text("p5*", centerHorz - 105, centerVert + 40);
-}
-
-// mousePressed() function is called once after every time a mouse button is pressed
-function mousePressed() {
-    // code to run when mouse is pressed
+  beginShape();
+  
+  for (let x = 0; x <= width; x += 10) {
+    
+    let vert_y = 10;
+    let vert2_y = noise(x * 5, count * 0.01) * height;
+    
+    if (mouseX > x && mouseY > vert2_y) {
+      vertex(x, vert2_y);
+      if (clicked) {
+        vertex(x, x);
+      }
+      if (frameCount - lastColorChange > colorChangeInterval) {
+      currentColor = color(random(255), random(255), random(255)); 
+      lastColorChange = frameCount;
+      }
+      fill(currentColor);
+      
+    } else {
+      vertex(x, vert_y + width / 2); //straight line
+      stroke(255); // Default stroke color
+    }
+  }
+  endShape();
+  
+  // Draw the cursor-following circle for fun
+  ellipse(mouseX, mouseY, 20, 20);
+  // Increment the global count variable to modify noise over time
+  count++;
 }
