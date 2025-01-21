@@ -39,6 +39,17 @@ function setup() {
   background(0);
   currentColor = color(255);
   noFill();
+  // place our canvas, making it fit our container
+  canvasContainer = $("#canvas-container");
+  let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
+  canvas.parent("canvas-container");
+  // resize canvas is the page is resized
+  // ... some other stuff
+  $(window).resize(function() {
+    resizeScreen();
+  });
+  resizeScreen();
+
 
 }
 
