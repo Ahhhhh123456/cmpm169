@@ -32,6 +32,9 @@ class MyClass {
     }
 }
 
+function mouseClicked() {
+  clicked = !clicked; // Toggle the clicked state
+}
 
 // setup() function is called once when the program starts
 function setup() {
