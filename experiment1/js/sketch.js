@@ -38,7 +38,7 @@ function resizeScreen() {
   centerVert = canvasContainer.height() / 2; // Adjusted for drawing logic
   console.log("Resizing...");
   resizeCanvas(canvasContainer.width(), canvasContainer.height());
-  redrawCanvas(); // Redraw everything based on new size
+  //redrawCanvas(); // Redraw everything based on new size
 }
 
 function mouseClicked() {
