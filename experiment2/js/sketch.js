@@ -15,6 +15,10 @@ let myInstance;
 let canvasContainer;
 var centerHorz, centerVert;
 
+let a = 0, b = 0, c = 0, d = 0, d2 = 0; 
+let t = 0;
+let r;
+
 class MyClass {
     constructor(param1, param2) {
         this.property1 = param1;
@@ -36,6 +40,10 @@ function resizeScreen() {
 
 // setup() function is called once when the program starts
 function setup() {
+  createCanvas(w = min(windowWidth, windowHeight), w);
+  background(0, 6, 60);
+  r = w / 4;
+
   // place our canvas, making it fit our container
   canvasContainer = $("#canvas-container");
   let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
@@ -49,31 +57,62 @@ function setup() {
     resizeScreen();
   });
   resizeScreen();
+
+
 }
 
 // draw() function is called repeatedly, it's the main animation loop
 function draw() {
-  background(220);    
-  // call a method on the instance
-  myInstance.myMethod();
+  let n = noise;
+  
+  let targetA = n(t + 9) * r;
+  let targetB = n(w) * r;
+  let targetC = n(t) * 6;
+  let targetD = n(t + 60) * 5;
+  let targetD2 = n(t + 60) * 15;
 
-  // Set up rotation for the rectangle
-  push(); // Save the current drawing context
-  translate(centerHorz, centerVert); // Move the origin to the rectangle's center
-  rotate(frameCount / 100.0); // Rotate by frameCount to animate the rotation
-  fill(234, 31, 81);
-  noStroke();
-  rect(-125, -125, 250, 250); // Draw the rectangle centered on the new origin
-  pop(); // Restore the original drawing context
+  a = lerp(a, targetA, 1.5);
+  b = lerp(b, targetB, 1.5);
+  c = lerp(c, targetC, 1.5);
+  d = lerp(d, targetD, 1.5);
+  d2 = lerp(d2, targetD2, 1.5);
 
-  // The text is not affected by the translate and rotate
-  fill(255);
-  textStyle(BOLD);
-  textSize(140);
-  text("p5*", centerHorz - 105, centerVert + 40);
+  t += 0.03;
+
+  line(width / 2, 0, width / 2, height); 
+  line(0, height / 2, width, height / 2); 
+
+  stroke(w, 30);
+
+  // Top-left
+  push();
+  line(cos(c) * a + r, sin(c) * a + r, cos(d) * b + r, -sin(d) * b + r);
+  pop();
+
+  // Top-right
+  push();
+  translate(width, 0);
+  scale(-1, 1);
+  line(cos(c + 100) * a + r, sin(c) * a + r, cos(d) * b + r, sin(d) * b + r);
+  pop();
+
+  // Bottom-left
+  push();
+  translate(0, height);
+  scale(1, -1);
+  line(cos(c + 100) * a + r, sin(c) * a + r, cos(d) * b + r, sin(d) * b + r);
+  pop();
+
+  // Bottom-right
+  push();
+  translate(width, height);
+  scale(-1, -1);
+  line(cos(c) * a + r, sin(c) * a + r, cos(d2) * b + r, sin(d2) * b + r);
+  pop();
 }
 
 // mousePressed() function is called once after every time a mouse button is pressed
 function mousePressed() {
-    // code to run when mouse is pressed
+  background(0, 6, 60);
+  redraw(); // Trigger a redraw of the entire canvas when mouse is clicked
 }
