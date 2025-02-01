@@ -15,6 +15,15 @@ let myInstance;
 let canvasContainer;
 var centerHorz, centerVert;
 
+var tileCountX = 3;
+var tileCountY = 4;
+var tileWidth;
+var tileHeight;
+var currentImage = 0;
+var movie;
+var song;
+var loopCount = 0;
+
 class MyClass {
     constructor(param1, param2) {
         this.property1 = param1;
@@ -34,8 +43,20 @@ function resizeScreen() {
   // redrawCanvas(); // Redraw everything based on new size
 }
 
+function preload() {
+  movie = createVideo(['./js/data/video.mp4']);
+  song = createVideo(['./js/data/video.ogg']);
+  song.loop();
+  movie.hide();
+}
+
 // setup() function is called once when the program starts
 function setup() {
+  createCanvas(1024, 1024);
+  background(0);
+  frameRate(2);
+  pixelDensity(5);
+  updateTileSize();
   // place our canvas, making it fit our container
   canvasContainer = $("#canvas-container");
   let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
@@ -51,29 +72,40 @@ function setup() {
   resizeScreen();
 }
 
-// draw() function is called repeatedly, it's the main animation loop
 function draw() {
-  background(220);    
-  // call a method on the instance
-  myInstance.myMethod();
+  if (movie.elt.readyState == 4) {
+    for (var gridY = 0; gridY < tileCountY; gridY++) {
+      for (var gridX = 0; gridX < tileCountX; gridX++) {
+        var posX = tileWidth * gridX;
+        var posY = tileHeight * gridY;
+        image(movie, posX, posY, tileWidth, tileHeight);
+      }
+    }
 
-  // Set up rotation for the rectangle
-  push(); // Save the current drawing context
-  translate(centerHorz, centerVert); // Move the origin to the rectangle's center
-  rotate(frameCount / 100.0); // Rotate by frameCount to animate the rotation
-  fill(234, 31, 81);
-  noStroke();
-  rect(-125, -125, 250, 250); // Draw the rectangle centered on the new origin
-  pop(); // Restore the original drawing context
+    currentImage++;
+    var nextTime = map(currentImage, 0, tileCountX * tileCountY, 0, movie.duration());
+    movie.time(nextTime);
 
-  // The text is not affected by the translate and rotate
-  fill(255);
-  textStyle(BOLD);
-  textSize(140);
-  text("p5*", centerHorz - 105, centerVert + 40);
+    if (currentImage >= tileCountX * tileCountY) {
+      currentImage = 0;
+      loopCount++;
+      increaseGridSize();
+    }
+  }
 }
 
-// mousePressed() function is called once after every time a mouse button is pressed
-function mousePressed() {
-    // code to run when mouse is pressed
+
+function increaseGridSize() {
+  tileCountX = min(tileCountX + 1, 20);
+  tileCountY = min(tileCountY + 1, 20);
+  updateTileSize();
+}
+
+function updateTileSize() {
+  tileWidth = width / tileCountX;
+  tileHeight = height / tileCountY;
+}
+
+function keyReleased() {
+  if (key == 's' || key == 'S') saveCanvas('snapshot_' + frameCount, 'webp');
 }
